@@ -1,0 +1,135 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <title>raml-docs-resource-viewer demo</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
+  <link rel="import" href="../../paper-listbox/paper-listbox.html">
+  <link rel="import" href="../../paper-item/paper-item.html">
+  <link rel="import" href="../../paper-toast/paper-toast.html">
+  <link rel="import" href="../../raml-docs-helpers/raml-docs-parser.html">
+  <link rel="import" href="../../raml-path-to-object/raml-path-to-object.html">
+  <link rel="import" href="../raml-docs-resource-viewer.html">
+  <style is="custom-style" include="demo-pages-shared-styles">
+  html,
+  body {
+    height: 100%;
+    background-color: #e5e5e5;
+  }
+
+  .vertical-section-container {
+    max-width: 100vw;
+    margin: 0 24px;
+  }
+
+  raml-docs-resource-viewer {
+    background-color: #ffffff;
+  }
+
+  .prefix {
+    color: rgba(0, 0, 0, 0.54);
+    margin-right: 8px;
+  }
+  </style>
+</head>
+
+<body unresolved>
+  <template is="dom-bind" id="app">
+    <div class="vertical-section-container centered">
+      <raml-docs-parser raml="{{raml}}" raml-file-url="https://raw.githubusercontent.com/advanced-rest-client/raml-example-api/master/api.raml"></raml-docs-parser>
+      <raml-path-to-object raml="[[raml.specification]]" selected-path="{{selectedPath}}" selected-object="{{selectedObject}}" is-resource="{{isSelectedResource}}"></raml-path-to-object>
+      <h3>The `raml-docs-method-viewer`</h3>
+      <template is="dom-if" if="[[resources]]">
+        <paper-dropdown-menu label="Selected resource">
+          <paper-listbox class="dropdown-content" attr-for-selected="data-path" selected="{{selectedPath}}">
+            <template is="dom-repeat" items="[[resources]]">
+              <paper-item data-path$="[[item.path]]"><span class="prefix" hidden="[[!item.endpoint]]">[[item.endpoint]]</span> [[item.name]]</paper-item>
+            </template>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </template>
+      <raml-docs-resource-viewer id="view" on-raml-path-changed="_ramlPathChanged" current-path="[[selectedPath]]" hidden$="[[!isSelectedResource]]" raml="[[selectedObject]]"></raml-docs-resource-viewer>
+      <p hidden$="[[isSelectedResource]]" class="info">Resource is not selected</p>
+    </div>
+    <paper-toast text="Methods are not supported in this demo." id="noMethods"></paper-toast>
+  </template>
+  <script>
+var $ = function(selector) {
+  return document.querySelector(selector);
+};
+(function(app) {
+  app.selectedPath = '';
+  app.isSelectedResource = false;
+  app.raml = undefined;
+  app.resources = undefined;
+  app.observers = [
+    '_ramlChanged(raml.*)'
+  ];
+  app._ramlChanged = function() {
+    app.selectedPath = '';
+    var api = app.raml.specification;
+    if (!api) {
+      return;
+    }
+    var data = [];
+    app._computePaths(data, '', '');
+    app.resources = data;
+  };
+  app._computePaths = function(arr, path, endpoint) {
+    var data = app.get('raml.specification' + path);
+    if (!data) {
+      return;
+    }
+    if (data.resources) {
+      data.resources.forEach(function(item, i) {
+        var _path = path + '.resources.' + i;
+        _path = _path.substr(1);
+
+        var _endpointName;
+        if (item.displayName) {
+          _endpointName = ' > ' + item.displayName;
+        } else {
+          _endpointName = item.relativeUri;
+        }
+        _endpointName = _endpointName.trim();
+
+        arr.push({
+          path: _path,
+          name: _endpointName,
+          endpoint: endpoint
+        });
+
+        app._computePaths(arr, path + '.resources.' + i, endpoint + _endpointName);
+      });
+    }
+  };
+  app._ramlPathChanged = function(e) {
+    var path = e.detail.path;
+    var _t = path.split('.');
+    if (_t[_t.length - 2] === 'methods') {
+      app.$.noMethods.opened = true;
+      return;
+    }
+    app.selectedPath = path;
+    app.$.view.scrollIntoView();
+  };
+})($('#app'));
+  </script>
+</body>
+
+</html>
