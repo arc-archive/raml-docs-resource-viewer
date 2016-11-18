@@ -111,6 +111,10 @@ Custom property | Description | Default
       }
     }
 
+    :host([hidden]) {
+      display: none !important;
+    }
+
     h1 {
       @apply(--paper-font-headline);
       @apply(--content-section);
@@ -272,7 +276,25 @@ Custom property | Description | Default
       // Computed list of methods. It's the element's internal structure.
       methods: Array,
       // Computed list of resources. It's the element's internal structure.
-      resources: Array
+      resources: Array,
+      /**
+       * If true then the element will start listen for the
+       * `raml-is-resource-changed`, `raml-selected-object-changed` and
+       * `raml-selected-path-changed` event and set corresponding properties
+       * when needed. It's a replacement for the Polymer's data biding
+       * for apps that are not Polymer powered.
+       */
+      autoHide: {
+        type: Boolean,
+        value: false,
+        observer: '_autoHideChanged'
+      },
+      // If true then the element will be hidden ui the UI.
+      hidden: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      }
     },
 
     observers: [
@@ -283,6 +305,74 @@ Custom property | Description | Default
 
     listeners: {
       'substable.tap': '_subResourceTap'
+    },
+
+    attached: function() {
+      this._eventTarget = Polymer.dom(this).host || document;
+      if (this.autoHide) {
+        this._attacheListeners();
+      }
+    },
+
+    _autoHideChanged: function(state) {
+      if (state) {
+        this._attacheListeners();
+      } else {
+        this._detachListeners();
+      }
+    },
+
+    _attacheListeners: function() {
+      if (!this._eventTarget) {
+        this.hidden = true;
+        return;
+      }
+      this._detachListeners();
+      this.listen(this._eventTarget, 'raml-is-resource-changed',
+        '_isResourceHandler');
+      this.listen(this._eventTarget, 'raml-selected-object-changed',
+        '_selectedChangeHandler');
+      this.listen(this._eventTarget, 'raml-selected-path-changed',
+        '_selectedPathChangeHandler');
+    },
+
+    _detachListeners: function() {
+      if (!this._eventTarget) {
+        return;
+      }
+      this.unlisten(this._eventTarget, 'raml-is-resource-changed',
+        '_isResourceHandler');
+      this.unlisten(this._eventTarget, 'raml-selected-object-changed',
+        '_selectedChangeHandler');
+      this.unlisten(this._eventTarget, 'raml-selected-path-changed',
+        '_selectedPathChangeHandler');
+    },
+    /**
+     * It's a handler for the `raml-is-resource-changed` event fired
+     * by other element. It sets the `hidden` value depending on the
+     * event's `state` parameter.
+     */
+    _isResourceHandler: function(e, detail) {
+      var state = detail.state;
+      this.hidden = !state;
+    },
+    /**
+     * Handler for the `selectedObject` (from the `<raml-path-to-object>`).
+     */
+    _selectedChangeHandler: function(e, detail) {
+      if (this.hidden) {
+        this.raml = undefined;
+        return;
+      }
+      this.raml = detail.selectedObject;
+    },
+
+    _selectedPathChangeHandler: function(e, detail) {
+      if (this.hidden) {
+        this.currentPath = undefined;
+        return;
+      }
+      this.currentPath = detail.path;
     },
 
     // Computes the name of the resource.
