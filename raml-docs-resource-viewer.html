@@ -169,6 +169,7 @@ Custom property | Description | Default
 
     .main {
       @apply(--layout-flex);
+      overflow: auto;
     }
 
     nav {
@@ -243,7 +244,7 @@ Custom property | Description | Default
                   <td colspan="3">Methods</td>
                 </tr>
                 <tr class="empty-table" hidden$="[[methods]]">
-                  <td colspan="3">This endopint does not have methods defined</td>
+                  <td colspan="3">This endpoint does not have methods defined</td>
                 </tr>
                 <template is="dom-repeat" items="[[methods]]">
                   <tr>
@@ -255,7 +256,7 @@ Custom property | Description | Default
                   <td colspan="3">Sub-resources</td>
                 </tr>
                 <tr class="empty-table" hidden$="[[resources]]">
-                  <td colspan="3">This endopint does not have sub-resources defined</td>
+                  <td colspan="3">This endpoint does not have sub-resources defined</td>
                 </tr>
                 <template is="dom-repeat" items="[[resources]]">
                   <tr>
