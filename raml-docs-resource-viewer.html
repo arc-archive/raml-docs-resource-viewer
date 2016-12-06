@@ -20,6 +20,8 @@ the License.
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../docs-parameters-table/docs-body-parameters-table.html">
 <link rel="import" href="../markdown-styles/markdown-styles.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
+
 <!--
 `<raml-docs-resource-viewer>` An element that displays a documentation for a RAML's resource object
 
@@ -161,74 +163,120 @@ Custom property | Description | Default
       @apply(--raml-docs-link);
     }
 
+    .container {
+      @apply(--layout-horizontal);
+    }
+
+    .main {
+      @apply(--layout-flex);
+      overflow: auto;
+    }
+
+    nav {
+      width: 210px;
+      border-left: 1px #e5e5e5 solid;
+      padding-left: 12px;
+      margin: 12px 0;
+      position: relative;
+      display: none;
+    }
+
+    [wide-layout] nav {
+      display: block;
+    }
+
+    .nav-links {
+      position: absolute;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 8px 12px;
+      margin: 8px 0;
+    }
+
     </style>
-    <div class="title-area">
-      <h1 class="title">
-        <span>Resource: </span>
-        <span class="resource-name">[[_computeResourceName(raml.*)]]</span>
-      </h1>
-    </div>
-    <template is="dom-if" if="[[raml.description]]">
-      <marked-element smartypants markdown="[[raml.description]]">
-        <div class="markdown-html resource-desc"></div>
-      </marked-element>
-    </template>
-    <section>
-      <h2>Resources representation</h2>
-      <p class="section-desc">This section describes list of resource representations used in this endpoint.</p>
-      <p hidden$="[[hasTypes]]" class="section-desc">No resources found for this endpoint</p>
-      <template is="dom-repeat" items="[[types]]">
-        <div class="type-block">
-          <template is="dom-if" if="[[displayTabs]]" restamp="true">
-            <paper-tabs selected="{{selectedMime}}">
-              <template is="dom-repeat" items="[[item.mimeTypes]]">
-                <paper-tab>[[item]]</paper-tab>
-              </template>
-            </paper-tabs>
-          </template>
-          <docs-body-parameters-table type="[[_computeType(types, index, selectedMime)]]" auto-hide></docs-body-parameters-table>
+
+    <iron-media-query query="(min-width: 900px)" query-matches="{{wide}}"></iron-media-query>
+
+    <div class="container" wide-layout$="{{wide}}">
+      <div class="main">
+        <div class="title-area">
+          <h1 id="overview" class="title">
+            <span>Resource: </span>
+            <span class="resource-name">[[_computeResourceName(raml.*)]]</span>
+          </h1>
         </div>
-      </template>
-    </section>
-    <section>
-      <h2>Methods and sub-resources</h2>
-      <div class="sub-resources-list">
-        <table class="params-table" id="substable">
-          <thead class="params-table-header">
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="params-table-header subheader">
-              <td colspan="3">Methods</td>
-            </tr>
-            <tr class="empty-table" hidden$="[[methods]]">
-              <td colspan="3">This endopint does not have methods defined</td>
-            </tr>
-            <template is="dom-repeat" items="[[methods]]">
-              <tr>
-                <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
-                <td class="param-desc">[[item.meta.description]]</td>
-              </tr>
-            </template>
-            <tr class="params-table-header subheader">
-              <td colspan="3">Sub-resources</td>
-            </tr>
-            <tr class="empty-table" hidden$="[[resources]]">
-              <td colspan="3">This endopint does not have sub-resources defined</td>
-            </tr>
-            <template is="dom-repeat" items="[[resources]]">
-              <tr>
-                <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
-                <td class="param-desc">[[item.meta.description]]</td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
+        <template is="dom-if" if="[[raml.description]]">
+          <marked-element smartypants markdown="[[raml.description]]">
+            <div class="markdown-html resource-desc"></div>
+          </marked-element>
+        </template>
+        <section>
+          <h2 id="resources">Resources representation</h2>
+          <p class="section-desc">This section describes list of resource representations used in this endpoint.</p>
+          <p hidden$="[[hasTypes]]" class="section-desc">No resources found for this endpoint</p>
+          <template is="dom-repeat" items="[[types]]">
+            <div class="type-block">
+              <template is="dom-if" if="[[displayTabs]]" restamp="true">
+                <paper-tabs selected="{{selectedMime}}">
+                  <template is="dom-repeat" items="[[item.mimeTypes]]">
+                    <paper-tab>[[item]]</paper-tab>
+                  </template>
+                </paper-tabs>
+              </template>
+              <docs-body-parameters-table type="[[_computeType(types, index, selectedMime)]]" auto-hide></docs-body-parameters-table>
+            </div>
+          </template>
+        </section>
+        <section>
+          <h2 id="methods">Methods and sub-resources</h2>
+          <div class="sub-resources-list">
+            <table class="params-table" id="substable">
+              <thead class="params-table-header">
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="params-table-header subheader">
+                  <td colspan="3">Methods</td>
+                </tr>
+                <tr class="empty-table" hidden$="[[methods]]">
+                  <td colspan="3">This endpoint does not have methods defined</td>
+                </tr>
+                <template is="dom-repeat" items="[[methods]]">
+                  <tr>
+                    <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
+                    <td class="param-desc">[[item.meta.description]]</td>
+                  </tr>
+                </template>
+                <tr class="params-table-header subheader">
+                  <td colspan="3">Sub-resources</td>
+                </tr>
+                <tr class="empty-table" hidden$="[[resources]]">
+                  <td colspan="3">This endpoint does not have sub-resources defined</td>
+                </tr>
+                <template is="dom-repeat" items="[[resources]]">
+                  <tr>
+                    <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
+                    <td class="param-desc">[[item.meta.description]]</td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
-    </section>
+      <nav>
+        <div class="nav-links">
+          <a href="#overview">Overview</a>
+          <a href="#resources">Resources</a>
+          <a href="#methods">Methods</a>
+        </div>
+      </nav>
+    </div>
   </template>
   <script>
   Polymer({
@@ -294,6 +342,11 @@ Custom property | Description | Default
         type: Boolean,
         value: false,
         reflectToAttribute: true
+      },
+      // If true then there's enough space to display right column
+      wide: {
+        type: Boolean,
+        value: false
       }
     },
 
@@ -312,6 +365,12 @@ Custom property | Description | Default
       if (this.autoHide) {
         this._attacheListeners();
       }
+      this.listen(window, 'scroll', '_scrollHandler');
+    },
+
+    detached: function() {
+      this._detachListeners();
+      this.unlisten(window, 'scroll', '_scrollHandler');
     },
 
     _autoHideChanged: function(state) {
@@ -437,18 +496,15 @@ Custom property | Description | Default
     },
 
     _extractType: function(obj) {
-      if (!obj || !obj.body) {
+      if (!obj || !obj.body || !obj.body.length) {
         return;
       }
       // var body = [];
       var mimes = [];
-      for (var mime in obj.body) {
-        // body[body.length] = {
-        //   'mime': mime,
-        //   'type': obj.body
-        // };
-        obj.body[mime].contentType = mime;
-        mimes[mimes.length] = mime;
+
+      for (var i = 0, len = obj.body.length; i < len; i++) {
+        obj.body[i].contentType = obj.body[i].key;
+        mimes[mimes.length] = obj.body[i].key;
       }
       return {
         types: obj.body,
@@ -474,7 +530,12 @@ Custom property | Description | Default
         return;
       }
       var mime = type.mimeTypes[selectedMime];
-      return type.types[mime];
+      for (var i = 0, len = type.types.length; i < len; i++) {
+        if (type.types[i].contentType === mime) {
+          return type.types[i];
+        }
+      }
+      return undefined;
     },
 
     _computeMethods: function(currentPath) {
@@ -532,6 +593,18 @@ Custom property | Description | Default
       this.fire('raml-path-changed', {
         path: path
       });
+    },
+
+    _scrollHandler: function() {
+      var elm = this.$$('.nav-links');
+      var parent = elm.parentNode;
+      var top = parent.getBoundingClientRect().top;
+      if (top < 24) {
+        var _top = Math.abs(top) + 24;
+        elm.style.top = _top + 'px';
+      } else {
+        elm.style.removeProperty('top');
+      }
     }
   });
   </script>

@@ -1,3 +1,14 @@
+<a name="1.0.3"></a>
+## [1.0.3](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.2...v1.0.3) (2016-12-06)
+
+
+### Update
+
+* Integrated with new CI ([6f14f3bfee55e88523510a6ad715072975ec0ee9](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/6f14f3bfee55e88523510a6ad715072975ec0ee9))
+* Updated dependency list - added iron-media-query ([f1e3397828b5aec6cf50b9b6bdf255f9435c8f69](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/f1e3397828b5aec6cf50b9b6bdf255f9435c8f69))
+
+
+
 <a name="1.0.2"></a>
 ## 1.0.2 (2016-11-18)
 

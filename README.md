@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/advanced-rest-client/raml-docs-resource-viewer.svg?branch=master)](https://travis-ci.org/advanced-rest-client/raml-docs-resource-viewer)  [![Dependency Status](https://dependencyci.com/github/advanced-rest-client/raml-docs-resource-viewer/badge)](https://dependencyci.com/github/advanced-rest-client/raml-docs-resource-viewer)  
+
+# raml-docs-resource-viewer
 
 `<raml-docs-resource-viewer>` An element that displays a documentation for a RAML's resource object
 

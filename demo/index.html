@@ -22,7 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../paper-listbox/paper-listbox.html">
   <link rel="import" href="../../paper-item/paper-item.html">
   <link rel="import" href="../../paper-toast/paper-toast.html">
-  <link rel="import" href="../../raml-docs-helpers/raml-docs-parser.html">
+  <link rel="import" href="../../arc-demo-helpers/raml-demo-parser.html">
   <link rel="import" href="../../raml-path-to-object/raml-path-to-object.html">
   <link rel="import" href="../raml-docs-resource-viewer.html">
   <style is="custom-style" include="demo-pages-shared-styles">
@@ -45,14 +45,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     color: rgba(0, 0, 0, 0.54);
     margin-right: 8px;
   }
+
+  raml-demo-parser {
+    background-color: #fff;
+    padding-left: 24px;
+  }
   </style>
 </head>
 
 <body unresolved>
   <template is="dom-bind" id="app">
     <div class="vertical-section-container centered">
-      <raml-docs-parser raml="{{raml}}" raml-file-url="https://raw.githubusercontent.com/advanced-rest-client/raml-example-api/master/api.raml"></raml-docs-parser>
-      <raml-path-to-object raml="[[raml.specification]]" selected-path="{{selectedPath}}" selected-object="{{selectedObject}}" is-resource="{{isSelectedResource}}"></raml-path-to-object>
+      <raml-demo-parser raml="{{raml}}" raml-file-url="https://raw.githubusercontent.com/advanced-rest-client/raml-example-api/master/api.raml"></raml-demo-parser>
+      <raml-path-to-object raml="[[raml]]" selected-path="{{selectedPath}}" selected-object="{{selectedObject}}" is-resource="{{isSelectedResource}}"></raml-path-to-object>
       <h3>The `raml-docs-method-viewer`</h3>
       <template is="dom-if" if="[[resources]]">
         <paper-dropdown-menu label="Selected resource">
@@ -82,7 +87,7 @@ var $ = function(selector) {
   ];
   app._ramlChanged = function() {
     app.selectedPath = '';
-    var api = app.raml.specification;
+    var api = app.raml;
     if (!api) {
       return;
     }
@@ -91,7 +96,7 @@ var $ = function(selector) {
     app.resources = data;
   };
   app._computePaths = function(arr, path, endpoint) {
-    var data = app.get('raml.specification' + path);
+    var data = app.get('raml' + path);
     if (!data) {
       return;
     }
