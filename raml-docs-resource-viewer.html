@@ -218,14 +218,7 @@ Custom property | Description | Default
           <p hidden$="[[hasTypes]]" class="section-desc">No resources found for this endpoint</p>
           <template is="dom-repeat" items="[[types]]">
             <div class="type-block">
-              <template is="dom-if" if="[[displayTabs]]" restamp="true">
-                <paper-tabs selected="{{selectedMime}}">
-                  <template is="dom-repeat" items="[[item.mimeTypes]]">
-                    <paper-tab>[[item]]</paper-tab>
-                  </template>
-                </paper-tabs>
-              </template>
-              <docs-body-parameters-table type="[[_computeType(types, index, selectedMime)]]" auto-hide></docs-body-parameters-table>
+              <docs-body-parameters-table body="[[item]]" auto-hide></docs-body-parameters-table>
             </div>
           </template>
         </section>
@@ -298,11 +291,6 @@ Custom property | Description | Default
        */
       types: {
         type: Array,
-        readOnly: true
-      },
-      // Computed value if the view should display tabs to select content type
-      displayTabs: {
-        type: Boolean,
         readOnly: true
       },
       // Computed value of is the resource has types defined in it.
@@ -459,17 +447,6 @@ Custom property | Description | Default
           }
         });
       }
-      var shouldDisplayTabs = false;
-      for (var i = 0, len = types.length; i < len; i++) {
-        if (types[i].hasTabs) {
-          shouldDisplayTabs = true;
-          break;
-        }
-      }
-      if (!types.length) {
-        console.warn('Something is wrong');
-      }
-      this._setDisplayTabs(shouldDisplayTabs);
       this._setTypes(types);
       this.selectedMime = 0;
     },
@@ -499,18 +476,7 @@ Custom property | Description | Default
       if (!obj || !obj.body || !obj.body.length) {
         return;
       }
-      // var body = [];
-      var mimes = [];
-
-      for (var i = 0, len = obj.body.length; i < len; i++) {
-        obj.body[i].contentType = obj.body[i].key;
-        mimes[mimes.length] = obj.body[i].key;
-      }
-      return {
-        types: obj.body,
-        hasTabs: mimes.length > 1,
-        mimeTypes: mimes
-      };
+      return obj.body;
     },
 
     // Computes if the resource has defined types. It will revalidate when `types` array change.
