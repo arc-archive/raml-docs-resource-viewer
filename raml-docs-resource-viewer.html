@@ -88,6 +88,7 @@ Custom property | Description | Default
 `--params-table-row-color` | Font color of table's each row |  `#fff`
 `--docs-parameters-table-cell` | Mixin applied to each cell | `{}`
 `--docs-parameters-table-meta` | Mixin applied to property's metadata (example, pattern, etc) | `{}`
+`--raml-docs-resource-viewer-narrow-container-width` | width of the main container in the narrow view | `calc(100vw - 32px)`
 
 @group RAML Elements
 @element raml-docs-resource-viewer
@@ -195,9 +196,14 @@ Custom property | Description | Default
       margin: 8px 0;
     }
 
+    :host([narrow]) .container {
+      max-width: var(--raml-docs-resource-viewer-narrow-container-width, calc(100vw - 32px));
+      overflow: auto;
+    }
     </style>
 
-    <iron-media-query query="(min-width: 900px)" query-matches="{{wide}}"></iron-media-query>
+    <iron-media-query query="(min-width: 800px)" query-matches="{{wide}}"></iron-media-query>
+    <iron-media-query query="(max-width: [[narrowWidth]])" query-matches="{{narrow}}"></iron-media-query>
 
     <div class="container" wide-layout$="{{wide}}">
       <div class="main">
@@ -335,6 +341,19 @@ Custom property | Description | Default
       wide: {
         type: Boolean,
         value: false
+      },
+      /**
+       * If set it will renders the view in the narrow layout.
+       */
+      narrow: {
+        type: Boolean,
+        notify: true,
+        reflectToAttribute: true
+      },
+      // A widith below which the `narrow` property will be set to true.
+      narrowWidth: {
+        type: String,
+        value: '768px'
       }
     },
 
