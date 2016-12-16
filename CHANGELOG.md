@@ -1,3 +1,13 @@
+<a name="1.0.6"></a>
+## [1.0.6](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.5...v1.0.6) (2016-12-16)
+
+
+### Update
+
+* Updated styles. Updated the narrow property propagation ([3c82b565550bdbda7348d841f699be29960d957f](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/3c82b565550bdbda7348d841f699be29960d957f))
+
+
+
 <<<<<<< HEAD
 <a name="1.0.5"></a>
 ## [1.0.5](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.4...v1.0.5) (2016-12-13)
