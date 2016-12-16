@@ -1,3 +1,14 @@
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.3...v1.0.4) (2016-12-16)
+
+
+### Update
+
+* Added narrow content width variable ([fb7490a62c82fa03a19efe8ede67cd09d2083432](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/fb7490a62c82fa03a19efe8ede67cd09d2083432))
+* Updated styles. Updated the narrow property propagation ([3c82b565550bdbda7348d841f699be29960d957f](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/3c82b565550bdbda7348d841f699be29960d957f))
+
+
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.2...v1.0.3) (2016-12-06)
 
