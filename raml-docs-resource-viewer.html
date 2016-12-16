@@ -136,6 +136,10 @@ Custom property | Description | Default
       @apply(--raml-docs-h3);
     }
 
+    .resource-name {
+      font-weight: 500;
+    }
+
     .resource-desc {
       @apply(--paper-font-body1);
       @apply(--content-section);
@@ -218,17 +222,17 @@ Custom property | Description | Default
             <div class="markdown-html resource-desc"></div>
           </marked-element>
         </template>
-        <section>
+        <section hidden$="[[!hasTypes]]">
           <h2 id="resources">Resources representation</h2>
           <p class="section-desc">This section describes list of resource representations used in this endpoint.</p>
-          <p hidden$="[[hasTypes]]" class="section-desc">No resources found for this endpoint</p>
+          <!-- <p hidden$="[[hasTypes]]" class="section-desc">No resources found for this endpoint</p> -->
           <template is="dom-repeat" items="[[types]]">
             <div class="type-block">
-              <docs-body-parameters-table body="[[item]]" auto-hide></docs-body-parameters-table>
+              <docs-body-parameters-table narrow="[[narrow]]" body="[[item]]" auto-hide></docs-body-parameters-table>
             </div>
           </template>
         </section>
-        <section>
+        <section hidden$="[[!hasSubproperties]]">
           <h2 id="methods">Methods and sub-resources</h2>
           <div class="sub-resources-list">
             <table class="params-table" id="substable">
@@ -239,24 +243,24 @@ Custom property | Description | Default
                 </tr>
               </thead>
               <tbody>
-                <tr class="params-table-header subheader">
+                <tr hidden$="[[!methods]]" class="params-table-header subheader">
                   <td colspan="3">Methods</td>
                 </tr>
-                <tr class="empty-table" hidden$="[[methods]]">
+                <!-- <tr class="empty-table" hidden$="[[methods]]">
                   <td colspan="3">This endpoint does not have methods defined</td>
-                </tr>
+                </tr> -->
                 <template is="dom-repeat" items="[[methods]]">
                   <tr>
                     <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
                     <td class="param-desc">[[item.meta.description]]</td>
                   </tr>
                 </template>
-                <tr class="params-table-header subheader">
+                <tr hidden$="[[!resources]]" class="params-table-header subheader">
                   <td colspan="3">Sub-resources</td>
                 </tr>
-                <tr class="empty-table" hidden$="[[resources]]">
+                <!-- <tr class="empty-table" hidden$="[[resources]]">
                   <td colspan="3">This endpoint does not have sub-resources defined</td>
-                </tr>
+                </tr> -->
                 <template is="dom-repeat" items="[[resources]]">
                   <tr>
                     <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
@@ -271,7 +275,7 @@ Custom property | Description | Default
       <nav>
         <div class="nav-links">
           <a href="#overview">Overview</a>
-          <a href="#resources">Resources</a>
+          <a hidden$="[[!hasTypes]]" href="#resources">Resources</a>
           <a href="#methods">Methods</a>
         </div>
       </nav>
@@ -319,6 +323,11 @@ Custom property | Description | Default
       methods: Array,
       // Computed list of resources. It's the element's internal structure.
       resources: Array,
+      // Computed value, True if the resource has methods or sub-resources.
+      hasSubproperties: {
+        type: Boolean,
+        computed: '_computeHasSubproperties(methods,resources)'
+      },
       /**
        * If true then the element will start listen for the
        * `raml-is-resource-changed`, `raml-selected-object-changed` and
@@ -526,7 +535,7 @@ Custom property | Description | Default
     _computeMethods: function(currentPath) {
       var r = this.raml;
       if (!currentPath || !r || !r.methods || !r.methods.length) {
-        this.methods = undefined;
+        this.methods = null;
         return;
       }
       var methods = [];
@@ -540,7 +549,7 @@ Custom property | Description | Default
         };
       });
       if (methods.length === 0) {
-        methods = undefined;
+        methods = null;
       }
       this.methods = methods;
     },
@@ -548,7 +557,7 @@ Custom property | Description | Default
     _computeResources: function(currentPath) {
       var r = this.raml;
       if (!currentPath || !r || !r.resources || !r.resources.length) {
-        this.resources = undefined;
+        this.resources = null;
         return;
       }
       var resources = [];
@@ -562,9 +571,13 @@ Custom property | Description | Default
         };
       });
       if (resources.length === 0) {
-        resources = undefined;
+        resources = null;
       }
       this.resources = resources;
+    },
+    // Computes the value for the hasSubproperties property.
+    _computeHasSubproperties: function(methods, resources) {
+      return ((methods && methods.length) || (resources && resources.length));
     },
 
     _subResourceTap: function(e) {
