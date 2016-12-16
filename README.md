@@ -67,6 +67,7 @@ Custom property | Description | Default
 `--params-table-row-color` | Font color of table's each row |  `#fff`
 `--docs-parameters-table-cell` | Mixin applied to each cell | `{}`
 `--docs-parameters-table-meta` | Mixin applied to property's metadata (example, pattern, etc) | `{}`
+`--raml-docs-resource-viewer-narrow-container-width` | width of the main container in the narrow view | `calc(100vw - 32px)`
 
 
 
