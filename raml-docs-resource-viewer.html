@@ -21,6 +21,7 @@ the License.
 <link rel="import" href="../docs-parameters-table/docs-body-parameters-table.html">
 <link rel="import" href="../markdown-styles/markdown-styles.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
+<link rel="import" href="../docs-parameters-table/docs-parameters-table-shared-styles.html">
 
 <!--
 `<raml-docs-resource-viewer>` An element that displays a documentation for a RAML's resource object
@@ -89,6 +90,10 @@ Custom property | Description | Default
 `--docs-parameters-table-cell` | Mixin applied to each cell | `{}`
 `--docs-parameters-table-meta` | Mixin applied to property's metadata (example, pattern, etc) | `{}`
 `--raml-docs-resource-viewer-narrow-container-width` | width of the main container in the narrow view | `calc(100vw - 32px)`
+`--raml-docs-resource-viewer-navigation` | Mixin applied to the links section | `{}`
+`--raml-docs-resource-viewer-navigation-wide-layout` | Mixin applied to the links section in wide layout | `{}`
+`--raml-docs-resource-viewer-content` | Mixin applied to the main content section. | `{}`
+`--raml-docs-resource-viewer-container` | Mixin applied to the container that is holding main content and navigation containers | `{}`
 
 @group RAML Elements
 @element raml-docs-resource-viewer
@@ -170,11 +175,13 @@ Custom property | Description | Default
 
     .container {
       @apply(--layout-horizontal);
+      @apply(--raml-docs-resource-viewer-container);
     }
 
     .main {
       @apply(--layout-flex);
       overflow: auto;
+      @apply(--raml-docs-resource-viewer-content);
     }
 
     nav {
@@ -184,10 +191,12 @@ Custom property | Description | Default
       margin: 12px 0;
       position: relative;
       display: none;
+      @apply(--raml-docs-resource-viewer-navigation);
     }
 
     [wide-layout] nav {
       display: block;
+      @apply(--raml-docs-resource-viewer-navigation-wide-layout);
     }
 
     .nav-links {
@@ -225,7 +234,6 @@ Custom property | Description | Default
         <section hidden$="[[!hasTypes]]">
           <h2 id="resources">Resources representation</h2>
           <p class="section-desc">This section describes list of resource representations used in this endpoint.</p>
-          <!-- <p hidden$="[[hasTypes]]" class="section-desc">No resources found for this endpoint</p> -->
           <template is="dom-repeat" items="[[types]]">
             <div class="type-block">
               <docs-body-parameters-table narrow="[[narrow]]" body="[[item]]" auto-hide></docs-body-parameters-table>
@@ -246,9 +254,6 @@ Custom property | Description | Default
                 <tr hidden$="[[!methods]]" class="params-table-header subheader">
                   <td colspan="3">Methods</td>
                 </tr>
-                <!-- <tr class="empty-table" hidden$="[[methods]]">
-                  <td colspan="3">This endpoint does not have methods defined</td>
-                </tr> -->
                 <template is="dom-repeat" items="[[methods]]">
                   <tr>
                     <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
@@ -258,9 +263,6 @@ Custom property | Description | Default
                 <tr hidden$="[[!resources]]" class="params-table-header subheader">
                   <td colspan="3">Sub-resources</td>
                 </tr>
-                <!-- <tr class="empty-table" hidden$="[[resources]]">
-                  <td colspan="3">This endpoint does not have sub-resources defined</td>
-                </tr> -->
                 <template is="dom-repeat" items="[[resources]]">
                   <tr>
                     <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
