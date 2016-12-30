@@ -1,3 +1,13 @@
+<a name="1.0.8"></a>
+## [1.0.8](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.7...v1.0.8) (2016-12-30)
+
+
+### New
+
+* Added new CSS mixins ([498a75c8d1eeb62d637f0b9181833b4ec8c00240](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/498a75c8d1eeb62d637f0b9181833b4ec8c00240))
+
+
+
 <a name="1.0.7"></a>
 ## [1.0.7](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.6...v1.0.7) (2016-12-16)
 

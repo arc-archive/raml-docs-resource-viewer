@@ -68,6 +68,10 @@ Custom property | Description | Default
 `--docs-parameters-table-cell` | Mixin applied to each cell | `{}`
 `--docs-parameters-table-meta` | Mixin applied to property's metadata (example, pattern, etc) | `{}`
 `--raml-docs-resource-viewer-narrow-container-width` | width of the main container in the narrow view | `calc(100vw - 32px)`
+`--raml-docs-resource-viewer-navigation` | Mixin applied to the links section | `{}`
+`--raml-docs-resource-viewer-navigation-wide-layout` | Mixin applied to the links section in wide layout | `{}`
+`--raml-docs-resource-viewer-content` | Mixin applied to the main content section. | `{}`
+`--raml-docs-resource-viewer-container` | Mixin applied to the container that is holding main content and navigation containers | `{}`
 
 
 
