@@ -18,9 +18,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../iron-test-helpers/test-helpers.js"></script>
     <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
+    <link rel="import" href="../../raml-js-parser/raml-js-parser.html">
     <link rel="import" href="../raml-docs-resource-viewer.html">
   </head>
   <body>
+
+    <test-fixture id="parser">
+      <template>
+        <raml-js-parser normalize-raml></raml-js-parser>
+      </template>
+    </test-fixture>
 
     <test-fixture id="basic">
       <template>
@@ -29,11 +36,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </test-fixture>
 
     <script>
-    /* global suite, test, fixture, assert */
+    /* global suite, test, fixture, assert, TestHelpers */
     suite('basic', function() {
-      test('`raml-docs-resource-viewer` should be initialized', function() {
-        var element = fixture('basic');
-        assert.equal(element.isAttached, true, 'element.isAttached equals true');
+
+      var element;
+      setup(function(done) {
+        var baseUrl = location.href.substr(0, location.href.lastIndexOf('/') + 1);
+        element = fixture('basic');
+        var parser = fixture('parser');
+        parser.loadApi(baseUrl + 'test.raml')
+        .then(function() {
+          element.raml = parser.get('latestJson.specification.resources.0');
+          element.currentPath = 'resources.0';
+          TestHelpers.forceXIfStamp(element);
+          done();
+        })
+        .catch(function(e) {
+          done(e);
+        });
+      });
+
+      test('Should compute `types` property', function() {
+        assert.isDefined(element.types, 'types is defined');
+        assert.lengthOf(element.types, 1, 'types has one element');
+      });
+
+      test('Should compute `hasTypes` property', function() {
+        assert.isTrue(element.hasTypes, 'hasTypes is true');
+      });
+
+      test('Should compute `hasSubproperties` property', function() {
+        assert.isTrue(element.hasSubproperties, 'hasSubproperties is true');
+      });
+
+      test('Should compute `methods` property', function() {
+        assert.isArray(element.methods, 'methods is true');
+        assert.lengthOf(element.methods, 1, 'methods has one element');
+      });
+
+      test('Should compute `resources` property', function() {
+        assert.isArray(element.resources, 'resources is true');
+        assert.lengthOf(element.resources, 1, 'resources has one element');
       });
     });
     </script>

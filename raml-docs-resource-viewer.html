@@ -22,7 +22,11 @@ the License.
 <link rel="import" href="../markdown-styles/markdown-styles.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <link rel="import" href="../docs-parameters-table/docs-parameters-table-shared-styles.html">
-
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../arc-icons/arc-icons.html">
+<link rel="import" href="../iron-scroll-target-behavior/iron-scroll-target-behavior.html">
 <!--
 `<raml-docs-resource-viewer>` An element that displays a documentation for a RAML's resource object
 
@@ -66,6 +70,18 @@ _navigate: function(e) {
 
 
 ### Styling
+The internal elemnts uses as uch width as they need. The code view displays
+code snippets without text wrapping by defaul. To set proper width
+set the `width` or `max-width` on this element so any code snippet will respect
+this limitation.
+
+```
+<raml-docs-resource-viewer
+  style="max-width: 900px"></raml-docs-resource-viewer>
+
+```
+This is also can be dome by setting `max-width` on any other parent elements.
+
 `<raml-docs-resource-viewer>` provides the following custom properties and mixins for styling:
 
 Custom property | Description | Default
@@ -89,11 +105,15 @@ Custom property | Description | Default
 `--params-table-row-color` | Font color of table's each row |  `#fff`
 `--docs-parameters-table-cell` | Mixin applied to each cell | `{}`
 `--docs-parameters-table-meta` | Mixin applied to property's metadata (example, pattern, etc) | `{}`
+`--raml-docs-resource-viewer-title-border-color` | Border color applied to the border of the section headline elements | `#e5e5e5`
 `--raml-docs-resource-viewer-narrow-container-width` | width of the main container in the narrow view | `calc(100vw - 32px)`
 `--raml-docs-resource-viewer-navigation` | Mixin applied to the links section | `{}`
 `--raml-docs-resource-viewer-navigation-wide-layout` | Mixin applied to the links section in wide layout | `{}`
 `--raml-docs-resource-viewer-content` | Mixin applied to the main content section. | `{}`
 `--raml-docs-resource-viewer-container` | Mixin applied to the container that is holding main content and navigation containers | `{}`
+`--arc-font-headline` | | Mixin applied to all headline (h1) elements in ARC ecosystem. | `{}`
+`--arc-font-title` | Mixin applied to all title elements in ARC ecosystem. | `{}`
+`--arc-font-body1` | Mixin applied to a ARC's body element | `{}`
 
 @group RAML Elements
 @element raml-docs-resource-viewer
@@ -124,13 +144,13 @@ Custom property | Description | Default
     }
 
     h1 {
-      @apply(--paper-font-headline);
+      @apply(--arc-font-headline);
       @apply(--content-section);
       @apply(--raml-docs-h1);
     }
 
     h2 {
-      @apply(--paper-font-title);
+      @apply(--arc-font-title);
       @apply(--content-section);
       @apply(--raml-docs-h2);
     }
@@ -146,13 +166,9 @@ Custom property | Description | Default
     }
 
     .resource-desc {
-      @apply(--paper-font-body1);
+      @apply(--arc-font-body1);
       @apply(--content-section);
       @apply(--raml-docs-item-description);
-    }
-
-    .section-desc {
-      @apply(--content-section);
     }
 
     .type-block {
@@ -199,11 +215,11 @@ Custom property | Description | Default
       @apply(--raml-docs-resource-viewer-navigation-wide-layout);
     }
 
-    .nav-links {
+    #nav-links {
       position: absolute;
     }
 
-    .nav-links a {
+    #nav-links a {
       display: block;
       padding: 8px 12px;
       margin: 8px 0;
@@ -212,6 +228,34 @@ Custom property | Description | Default
     :host([narrow]) .container {
       max-width: var(--raml-docs-resource-viewer-narrow-container-width, calc(100vw - 32px));
       overflow: auto;
+    }
+
+    .section-title-area {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      border-bottom: 1px var(--raml-docs-resource-viewer-title-border-color, #e5e5e5) solid;
+    }
+
+    .section-title-area h2 {
+      @apply(--layout-flex);
+    }
+
+    .toggle-button {
+      color: var(--response-status-view-toggle-icon-color, rgba(0, 0, 0, 0.54));
+      transition: color 0.25s linear;
+    }
+
+    .toggle-icon {
+      transform: rotateZ(0deg);
+      transition: transform 0.3s linear;
+    }
+
+    .toggle-icon.opened {
+      transform: rotateZ(-180deg);
+    }
+
+    .toggle-button:hover {
+      color: var(--response-status-view-toggle-icon-hover-color, rgba(0, 0, 0, 0.78));
     }
     </style>
 
@@ -232,50 +276,69 @@ Custom property | Description | Default
           </marked-element>
         </template>
         <section hidden$="[[!hasTypes]]">
-          <h2 id="resources">Resources representation</h2>
-          <p class="section-desc">This section describes list of resource representations used in this endpoint.</p>
-          <template is="dom-repeat" items="[[types]]">
-            <div class="type-block">
-              <docs-body-parameters-table narrow="[[narrow]]" body="[[item]]" auto-hide></docs-body-parameters-table>
+          <div class="section-title-area">
+            <h2 id="resources">Types</h2>
+            <div class="title-area-actions">
+              <paper-button on-tap="toggleTypesCollapse" class="toggle-button" title="Toogle types details">
+                [[_computeToggleActionLabel(typesOpened)]]
+                <iron-icon icon="arc:expand-more" class$="[[_computeToggleIconClass(typesOpened)]]"></iron-icon>
+              </paper-button>
             </div>
-          </template>
+          </div>
+          <iron-collapse opened="[[typesOpened]]">
+            <template is="dom-repeat" items="[[types]]">
+              <div class="type-block">
+                <docs-body-parameters-table narrow="[[narrow]]" body="[[item]]" auto-hide></docs-body-parameters-table>
+              </div>
+            </template>
+          </iron-collapse>
         </section>
         <section hidden$="[[!hasSubproperties]]">
-          <h2 id="methods">Methods and sub-resources</h2>
-          <div class="sub-resources-list">
-            <table class="params-table" id="substable">
-              <thead class="params-table-header">
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr hidden$="[[!methods]]" class="params-table-header subheader">
-                  <td colspan="3">Methods</td>
-                </tr>
-                <template is="dom-repeat" items="[[methods]]">
-                  <tr>
-                    <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
-                    <td class="param-desc">[[item.meta.description]]</td>
-                  </tr>
-                </template>
-                <tr hidden$="[[!resources]]" class="params-table-header subheader">
-                  <td colspan="3">Sub-resources</td>
-                </tr>
-                <template is="dom-repeat" items="[[resources]]">
-                  <tr>
-                    <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
-                    <td class="param-desc">[[item.meta.description]]</td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
+          <div class="section-title-area">
+            <h2 id="methods">Methods and sub-resources</h2>
+            <div class="title-area-actions">
+              <paper-button on-tap="toggleMethodsCollapse" class="toggle-button" title="Toogle methods and sub-resources details">
+                [[_computeToggleActionLabel(methodsOpened)]]
+                <iron-icon icon="arc:expand-more" class$="[[_computeToggleIconClass(methodsOpened)]]"></iron-icon>
+              </paper-button>
+            </div>
           </div>
+          <iron-collapse opened="[[methodsOpened]]">
+            <div class="sub-resources-list">
+              <table class="params-table" id="substable">
+                <thead class="params-table-header">
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr hidden$="[[!methods]]" class="params-table-header subheader">
+                    <td colspan="3">Methods</td>
+                  </tr>
+                  <template is="dom-repeat" items="[[methods]]">
+                    <tr>
+                      <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
+                      <td class="param-desc">[[item.meta.description]]</td>
+                    </tr>
+                  </template>
+                  <tr hidden$="[[!resources]]" class="params-table-header subheader">
+                    <td colspan="3">Sub-resources</td>
+                  </tr>
+                  <template is="dom-repeat" items="[[resources]]">
+                    <tr>
+                      <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
+                      <td class="param-desc">[[item.meta.description]]</td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </iron-collapse>
         </section>
       </div>
       <nav>
-        <div class="nav-links">
+        <div id="nav-links">
           <a href="#overview">Overview</a>
           <a hidden$="[[!hasTypes]]" href="#resources">Resources</a>
           <a href="#methods">Methods</a>
@@ -287,36 +350,40 @@ Custom property | Description | Default
   Polymer({
     is: 'raml-docs-resource-viewer',
 
-    behaviors: [Polymer.RamlBehavior],
+    behaviors: [
+      Polymer.RamlBehavior,
+      Polymer.IronScrollTargetBehavior
+    ],
     /**
      * An event fired when the user cliecked on a method/sub-resource link.
-     * Before the event is fired the `currentPath` propery is set. If parent element
-     * is listening for change on this property then it's redundand to listen for this event.
+     * Before the event is fired the `currentPath` propery is set. If parent
+     * element is listening for change on this property then it's redundand to
+     * listen for this event.
      *
      * @event raml-path-changed
      * @property {String} path Path requested by the user.
      */
     properties: {
       /**
-       * List of computed types used by this endpoint.It looks for types inside methods
-       * defined for this resource. It will not search for types nested resources.
+       * Computed value. List of types used by this endpoint.
+       * The elements looks for types inside methods of this resource.
+       *
+       * It will not search for types in nested resources.
        */
       types: {
         type: Array,
         readOnly: true
       },
-      // Computed value of is the resource has types defined in it.
+      // Computed value. True when the resource has types defined in it.
       hasTypes: {
         type: Boolean,
         value: false,
         computed: '_computeHasTypes(types.length)'
       },
       /**
-       * This is used when the resource types has more than one mime type that describe the type.
-       * When the user change the type in one place then all descriptions will change.
+       * Curently selected path in the RAML JSON structure. Required to compute
+       * sub-resources.
        */
-      selectedMime: String,
-      // Curently selected path in the RAML JSON structure. Required to compute sub-resources.
       currentPath: {
         type: String,
         notify: true
@@ -328,7 +395,7 @@ Custom property | Description | Default
       // Computed value, True if the resource has methods or sub-resources.
       hasSubproperties: {
         type: Boolean,
-        computed: '_computeHasSubproperties(methods,resources)'
+        computed: '_computeHasSubproperties(methods, resources)'
       },
       /**
        * If true then the element will start listen for the
@@ -365,6 +432,16 @@ Custom property | Description | Default
       narrowWidth: {
         type: String,
         value: '768px'
+      },
+      // If true then the types section is visible.
+      typesOpened: {
+        type: Boolean,
+        value: true
+      },
+      // If true then the methods and sub-resources section is visible.
+      methodsOpened: {
+        type: Boolean,
+        value: true
       }
     },
 
@@ -375,7 +452,8 @@ Custom property | Description | Default
     ],
 
     listeners: {
-      'substable.tap': '_subResourceTap'
+      'substable.tap': '_subResourceTap',
+      'nav-links.tap': '_navLinksTap'
     },
 
     attached: function() {
@@ -478,7 +556,6 @@ Custom property | Description | Default
         });
       }
       this._setTypes(types);
-      this.selectedMime = 0;
     },
 
     _listTypes: function(obj) {
@@ -512,26 +589,6 @@ Custom property | Description | Default
     // Computes if the resource has defined types. It will revalidate when `types` array change.
     _computeHasTypes: function() {
       return !!(this.types && this.types.length);
-    },
-
-    _computeType: function(types, index, selectedMime) {
-      if (!types || !types.length) {
-        return;
-      }
-      var type = types[index];
-      if (!type) {
-        return;
-      }
-      if ((type.mimeTypes.length - 1) < selectedMime) {
-        return;
-      }
-      var mime = type.mimeTypes[selectedMime];
-      for (var i = 0, len = type.types.length; i < len; i++) {
-        if (type.types[i].contentType === mime) {
-          return type.types[i];
-        }
-      }
-      return undefined;
     },
 
     _computeMethods: function(currentPath) {
@@ -579,7 +636,7 @@ Custom property | Description | Default
     },
     // Computes the value for the hasSubproperties property.
     _computeHasSubproperties: function(methods, resources) {
-      return ((methods && methods.length) || (resources && resources.length));
+      return !!((methods && methods.length) || (resources && resources.length));
     },
 
     _subResourceTap: function(e) {
@@ -595,8 +652,20 @@ Custom property | Description | Default
       });
     },
 
+    _navLinksTap: function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var targetId = e.target.getAttribute('href');
+      if (!targetId) {
+        return;
+      }
+      var target = this.$$(targetId);
+      console.log(target);
+      this.scroll(0, target.offsetTop);
+    },
+
     _scrollHandler: function() {
-      var elm = this.$$('.nav-links');
+      var elm = this.$$('#nav-links');
       var parent = elm.parentNode;
       var top = parent.getBoundingClientRect().top;
       if (top < 24) {
@@ -605,6 +674,31 @@ Custom property | Description | Default
       } else {
         elm.style.removeProperty('top');
       }
+    },
+
+    // Computes class for the toggle's button icon.
+    _computeToggleIconClass: function(opened) {
+      var clazz = 'toggle-icon';
+      if (opened) {
+        clazz += ' opened';
+      }
+      return clazz;
+    },
+    // Computes a label for the section toggle buttons.
+    _computeToggleActionLabel: function(opened) {
+      return opened ? 'Hide' : 'Show';
+    },
+    /**
+     * Toogles types section opened / closed.
+     */
+    toggleTypesCollapse: function() {
+      this.typesOpened = !this.typesOpened;
+    },
+    /**
+     * Toogles types section opened / closed.
+     */
+    toggleMethodsCollapse: function() {
+      this.methodsOpened = !this.methodsOpened;
     }
   });
   </script>
