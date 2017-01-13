@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/advanced-rest-client/raml-docs-resource-viewer.svg?branch=master)](https://travis-ci.org/advanced-rest-client/raml-docs-resource-viewer)  [![Dependency Status](https://dependencyci.com/github/advanced-rest-client/raml-docs-resource-viewer/badge)](https://dependencyci.com/github/advanced-rest-client/raml-docs-resource-viewer)  
+[![Build Status](https://travis-ci.org/advanced-rest-client/raml-docs-resource-viewer.svg?branch=stage)](https://travis-ci.org/advanced-rest-client/raml-docs-resource-viewer)  
 
 # raml-docs-resource-viewer
 
@@ -44,6 +44,18 @@ _navigate: function(e) {
 
 
 ### Styling
+The internal elemnts uses as uch width as they need. The code view displays
+code snippets without text wrapping by defaul. To set proper width
+set the `width` or `max-width` on this element so any code snippet will respect
+this limitation.
+
+```
+<raml-docs-resource-viewer
+  style="max-width: 900px"></raml-docs-resource-viewer>
+
+```
+This is also can be dome by setting `max-width` on any other parent elements.
+
 `<raml-docs-resource-viewer>` provides the following custom properties and mixins for styling:
 
 Custom property | Description | Default
@@ -67,11 +79,15 @@ Custom property | Description | Default
 `--params-table-row-color` | Font color of table's each row |  `#fff`
 `--docs-parameters-table-cell` | Mixin applied to each cell | `{}`
 `--docs-parameters-table-meta` | Mixin applied to property's metadata (example, pattern, etc) | `{}`
+`--raml-docs-resource-viewer-title-border-color` | Border color applied to the border of the section headline elements | `#e5e5e5`
 `--raml-docs-resource-viewer-narrow-container-width` | width of the main container in the narrow view | `calc(100vw - 32px)`
 `--raml-docs-resource-viewer-navigation` | Mixin applied to the links section | `{}`
 `--raml-docs-resource-viewer-navigation-wide-layout` | Mixin applied to the links section in wide layout | `{}`
 `--raml-docs-resource-viewer-content` | Mixin applied to the main content section. | `{}`
 `--raml-docs-resource-viewer-container` | Mixin applied to the container that is holding main content and navigation containers | `{}`
+`--arc-font-headline` | | Mixin applied to all headline (h1) elements in ARC ecosystem. | `{}`
+`--arc-font-title` | Mixin applied to all title elements in ARC ecosystem. | `{}`
+`--arc-font-body1` | Mixin applied to a ARC's body element | `{}`
 
 
 
