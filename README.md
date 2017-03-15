@@ -13,11 +13,9 @@ sub-resources list. It is required for navigation.
 ```
 
 ## Requesting navigation to method / sub-property
-When the user click on the name of a method or a sub-resource then two things will hapen:
-1) `currentPath` will be set to the path corresponded to requested resource
-2) `raml-path-changed` event will be fired with the `path` property in event detail object.
-
-Parent element(s) should use one of this method to handle the change and navigate to sub-resource.
+When the user click on the name of a method or a sub-resource then the `raml-path-changed` event
+will be fired with the `path` property in event detail object.
+Parent element(s) should use this event to handle the change and navigate to sub-resource.
 
 Method 1) assumes that Polymer's data binding model is used and parent element listens to change
 in `currentPath`:

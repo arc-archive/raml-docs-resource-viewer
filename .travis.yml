@@ -6,10 +6,11 @@ before_script:
 - npm install --silent bower polymer-cli
 - ./node_modules/.bin/bower install --silent
 addons:
-  sauce_connect: false
+  sauce_connect: true
 script:
 - ./node_modules/.bin/polymer lint raml-docs-resource-viewer.html
-# - ./node_modules/.bin/polymer test --plugin sauce --job-name "docs-parameters-table:${TRAVIS_BRANCH}" --build-number=${TRAVIS_BUILD_NUMBER}
+- ./node_modules/.bin/polymer test --plugin sauce --job-name "docs-parameters-table:${TRAVIS_BRANCH}"
+  --build-number=${TRAVIS_BUILD_NUMBER}
 cache:
   directories:
   - bower_components
@@ -20,3 +21,7 @@ branches:
   - develop
 after_success:
 - node tasks/ci.js
+env:
+  global:
+  - secure: ipnZn7GgvKPsgBlxGrbZgBMOLGlE27yw2PvzHIqcq8deHhExvkjs+4VC+kMkKzcEbmcpby+86E/YVBx4gVU0f+D/S9Qk5JU9DjRKwZ03hxvTrzsucY1DU99fUwSMxbHVR9S4tvZfYZ495sPlnt6Fz0Q+VEYvAsbU5suCsIYeYC2ZqQm2jNw2VgTD2dfFJGgB4VP/cyzMVMizyW3j1axASc74x1TOsyBXRviHnXY1H67BXw7R9jl+jbAwVx7OEoMPYp1GbT/lvpcqwks0V7eT4cA5qKzf3gQIPvCFrQSEYPMBb7Vd9ET9NKbiHIgPfGaH8kuC417gJioJJDLTRJmOXYlDgVyTBb+qVP73reGmqmngdF+ErgWa68n8+GuJaBxvNWyZS4EZqzjIEsU1N2h3ZXsexGjTiU88ZF+7VBcjqHT25f0010/mjDUo1ouoWyonZ8wB2gefct31WPp9AbDXB5wUaaxEpR7dhfQZyudGDQiGwUZS+GesGL9SrLseVYViLqC8DBq5G5eGIaxFUEiMAbw3WN6i1Get1lP04eBAiiypUepeqR5IWVr/s6ZYT+iYU70Y7TlN9mTxa7YYeCSlx2t47M0F8qBHqn5zhqYUe8QknxAxoBiBNfhMZp4sOnJxMS4uno3ATXA0Tie3zp0qPiYsz/FFKjt3ajDoFS7coyg=
+  - secure: GfvNq8M8CUfsxVnLMIa/wvwEI5OFNfO1tEzKokU0Whs2Suv+hna+kSzayt/IiirxHUVatZlf9KcxnqYp36uO7BUE0xY7+StyLcTNi2xyoaH2B91WH3I8cN4G0ZAamBuZOGuI5yZbARu9jUVYoBHuMfZLfih9NnqjUvryxAU+ORfSsW0PX1v1EItuIf1FNoeioJf9lKhOJ4HHP6+cnToAdmeurLhwog6htPISUXT/Bpb++TsrsLq3o7lhSGNEj214nM7nV1hnWvxpPCh2Ep9BqeZE1pFOHU/AbCRCyFrZw48N1OsXiQxUkz/SzrVpTQxsSB+FF7Xt54wcubi0GqLZe77RWVYg/k1bp+JFvYt91vk8oGCvzDcHzcQH8sSu9G5hfAERfm3MmZHxukQhvaOcAfsnOjwCjnYy0Fw57J/e3yHZ5bpvlu1orHamTOkT9i3Q/xLekqC0XwrDS0G1uyysSOixv953zxGJZdpoeO4yPRBZIQcKNOcdbb7+tE6ZoBcY1pZYvVs2dI6ZYVGQG17w02BTz+jJEX4lNQV421ixmXUo7w4/MavjuUu8aN7NfaNaHAMPVuJ8aMZo2PXzMfp7wJsA7pWjNkX1jEesKFNhnR6SZq+xJpWPqDbV3jKZR+FaycMnbr83Qt1Ntn6aFk0bdukQscq3jwY886YTWNT3WSE=
