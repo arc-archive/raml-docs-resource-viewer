@@ -1,3 +1,17 @@
+<a name="1.0.11"></a>
+## [1.0.11](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.10...v1.0.11) (2017-03-15)
+
+
+### Breaking
+
+* the element will not do not change the path and path changes won't be notified. Instead use raml-path-changed event to handle navigation ([07d3ecb3ca14fb13f12a90ef2e1ee05e9d65e232](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/07d3ecb3ca14fb13f12a90ef2e1ee05e9d65e232))
+
+### Update
+
+* Updated travis congig to connect to Sauce ([7fda37a3ccb372dea314157ff9351e85ff0e5bd8](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/7fda37a3ccb372dea314157ff9351e85ff0e5bd8))
+
+
+
 <a name="1.0.8"></a>
 ## [1.0.8](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.7...v1.0.8) (2016-12-30)
 
