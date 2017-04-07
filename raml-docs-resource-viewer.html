@@ -260,7 +260,7 @@ Custom property | Description | Default
     <iron-media-query query="(min-width: 800px)" query-matches="{{wide}}"></iron-media-query>
     <iron-media-query query="(max-width: [[narrowWidth]])" query-matches="{{narrow}}"></iron-media-query>
 
-    <div class="container" wide-layout$="{{wide}}">
+    <div class="container" wide-layout$="[[isWideLayout]]">
       <div class="main">
         <div class="title-area">
           <h1 id="overview" class="title">
@@ -439,6 +439,11 @@ Custom property | Description | Default
       methodsOpened: {
         type: Boolean,
         value: true
+      },
+      // Computed value, true if renders wide layout (with nav links)
+      isWideLayout: {
+        type: Boolean,
+        computed: '_computeIsWideLayout(narrow, wide)'
       }
     },
 
@@ -695,6 +700,12 @@ Custom property | Description | Default
      */
     toggleMethodsCollapse: function() {
       this.methodsOpened = !this.methodsOpened;
+    },
+    /**
+     * Computes the sate of the `isWideLayout` property.
+     */
+    _computeIsWideLayout: function(narrow, wide) {
+      return !narrow && wide;
     }
   });
   </script>
