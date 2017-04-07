@@ -1,3 +1,13 @@
+<a name="1.0.13"></a>
+## [1.0.13](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.11...v1.0.13) (2017-04-07)
+
+
+### Fix
+
+* Fixed narrow layout directive ([acdb9a4a89817ac1f6d14d4289a63d56139fb820](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/acdb9a4a89817ac1f6d14d4289a63d56139fb820))
+
+
+
 <a name="1.0.12"></a>
 ## [1.0.12](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.11...v1.0.12) (2017-04-07)
 
