@@ -112,6 +112,9 @@ Custom property | Description | Default
 `--arc-font-headline` | | Mixin applied to all headline (h1) elements in ARC ecosystem. | `{}`
 `--arc-font-title` | Mixin applied to all title elements in ARC ecosystem. | `{}`
 `--arc-font-body1` | Mixin applied to a ARC's body element | `{}`
+`--sidebar-list` | Mixin applied to sidebar list of links | `{}`
+`--sidebar-list-link` | Mixin applied to each link in sidebar list of links | `{}`
+`--sidebar-list-link-hover` | Mixin applied to :hover state for links in sidebar list of links | `{}`
 
 @group RAML Elements
 @element raml-docs-resource-viewer
@@ -215,12 +218,18 @@ Custom property | Description | Default
 
     #nav-links {
       position: absolute;
+      @apply(--sidebar-list);
     }
 
     #nav-links a {
       display: block;
       padding: 8px 12px;
       margin: 8px 0;
+      @apply(--sidebar-list-link);
+    }
+
+    #nav-links a:hover {
+      @apply(--sidebar-list-link-hover);
     }
 
     :host([narrow]) .container {
