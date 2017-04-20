@@ -115,6 +115,7 @@ Custom property | Description | Default
 `--sidebar-list` | Mixin applied to sidebar list of links | `{}`
 `--sidebar-list-link` | Mixin applied to each link in sidebar list of links | `{}`
 `--sidebar-list-link-hover` | Mixin applied to :hover state for links in sidebar list of links | `{}`
+`--title-area-actions` | Mixin applied to toggling actions area | `{}`
 
 @group RAML Elements
 @element raml-docs-resource-viewer
@@ -250,6 +251,7 @@ Custom property | Description | Default
     .toggle-button {
       color: var(--response-status-view-toggle-icon-color, rgba(0, 0, 0, 0.54));
       transition: color 0.25s linear;
+      @apply(--toggle-button);
     }
 
     .toggle-icon {
@@ -263,7 +265,13 @@ Custom property | Description | Default
 
     .toggle-button:hover {
       color: var(--response-status-view-toggle-icon-hover-color, rgba(0, 0, 0, 0.78));
+      @apply(--toggle-button-hover);
     }
+
+    .title-area-actions {
+      @apply(--title-area-actions);
+    }
+
     </style>
 
     <iron-media-query query="(min-width: 800px)" query-matches="{{wide}}"></iron-media-query>
