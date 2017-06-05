@@ -86,6 +86,19 @@ Custom property | Description | Default
 `--arc-font-headline` | | Mixin applied to all headline (h1) elements in ARC ecosystem. | `{}`
 `--arc-font-title` | Mixin applied to all title elements in ARC ecosystem. | `{}`
 `--arc-font-body1` | Mixin applied to a ARC's body element | `{}`
+`--sidebar-list` | Mixin applied to sidebar list of links | `{}`
+`--sidebar-list-link` | Mixin applied to each link in sidebar list of links | `{}`
+`--sidebar-list-link-hover` | Mixin applied to :hover state for links in sidebar list of links | `{}`
+`--toggle-button` | Mixin applied to toggling button (show/hide) | `{}`
+`--toggle-button-hover` | Mixin applied to toggling button on hover (show/hide) | `{}`
+`--raml-docs-method-viewer-title-area-actions` | Mixin applied to toggling actions area | `{}`
+`--raml-docs-method-viewer-traits-list` | Mixin applied to the list of traits container | `{}`
+`--raml-docs-method-viewer-traits-list-values` | Mixin applied to the list of traits values (names) | `{}`
+`--raml-docs-method-viewer-traits-list-label` | Mixin applied to the list of traits list label | `{}`
+`--raml-docs-method-viewer-traits-list-values-color` | Color of the traits list values (names) | `rgba(0,0,0,0.94)`
+`--raml-docs-method-viewer-traits-list-label-color` | Color of the traits list label | `rgba(0,0,0,0.74)`
+`--raml-docs-method-viewer-traits-list-help-icon` | A mixin applied to the "more info" icon | `{}`
+`--raml-docs-method-viewer-traits-list-padding` | Padding applied to the traits and resource types container | `0px 12px`
 
 
 

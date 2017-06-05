@@ -1,3 +1,17 @@
+<a name="1.0.14"></a>
+## [1.0.14](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.13...v1.0.14) (2017-06-05)
+
+
+### New
+
+* Added traits and resource type information to the resource documentation ([f0c397a1b0e00671d72d8ec82cf04f5adc35c115](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/f0c397a1b0e00671d72d8ec82cf04f5adc35c115))
+
+### Update
+
+* Added test for traits and resource types ([ef77813b43a2f1146e2c0d1a2326dc40e91fc510](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/ef77813b43a2f1146e2c0d1a2326dc40e91fc510))
+
+
+
 <a name="1.0.13"></a>
 ## [1.0.13](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.11...v1.0.13) (2017-04-07)
 
