@@ -49,7 +49,8 @@
     "raml-path-selector": "advanced-rest-client/raml-path-selector#^1.0.0",
     "raml-path-to-object": "advanced-rest-client/raml-path-to-object#^1.0.0",
     "paper-toast": "PolymerElements/paper-toast#^1.3.0",
-    "raml-js-parser": "advanced-rest-client/raml-js-parser#^2.0.0"
+    "raml-js-parser": "advanced-rest-client/raml-js-parser#^2.0.0",
+    "raml-json-enhance": "advanced-rest-client/raml-json-enhance#^0.1.13"
   },
   "ignore": [
     "**/.*",
