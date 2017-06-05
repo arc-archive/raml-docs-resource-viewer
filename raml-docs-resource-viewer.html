@@ -27,6 +27,7 @@ the License.
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../arc-icons/arc-icons.html">
 <link rel="import" href="../iron-scroll-target-behavior/iron-scroll-target-behavior.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
 <!--
 `<raml-docs-resource-viewer>` An element that displays a documentation for a RAML's resource object
 
@@ -115,7 +116,16 @@ Custom property | Description | Default
 `--sidebar-list` | Mixin applied to sidebar list of links | `{}`
 `--sidebar-list-link` | Mixin applied to each link in sidebar list of links | `{}`
 `--sidebar-list-link-hover` | Mixin applied to :hover state for links in sidebar list of links | `{}`
-`--title-area-actions` | Mixin applied to toggling actions area | `{}`
+`--toggle-button` | Mixin applied to toggling button (show/hide) | `{}`
+`--toggle-button-hover` | Mixin applied to toggling button on hover (show/hide) | `{}`
+`--raml-docs-method-viewer-title-area-actions` | Mixin applied to toggling actions area | `{}`
+`--raml-docs-method-viewer-traits-list` | Mixin applied to the list of traits container | `{}`
+`--raml-docs-method-viewer-traits-list-values` | Mixin applied to the list of traits values (names) | `{}`
+`--raml-docs-method-viewer-traits-list-label` | Mixin applied to the list of traits list label | `{}`
+`--raml-docs-method-viewer-traits-list-values-color` | Color of the traits list values (names) | `rgba(0,0,0,0.94)`
+`--raml-docs-method-viewer-traits-list-label-color` | Color of the traits list label | `rgba(0,0,0,0.74)`
+`--raml-docs-method-viewer-traits-list-help-icon` | A mixin applied to the "more info" icon | `{}`
+`--raml-docs-method-viewer-traits-list-padding` | Padding applied to the traits and resource types container | `0px 12px`
 
 @group RAML Elements
 @element raml-docs-resource-viewer
@@ -269,6 +279,37 @@ Custom property | Description | Default
     }
 
     .title-area-actions {
+      @apply(--raml-docs-method-viewer-title-area-actions);
+    }
+
+    .traits-list,
+    .resource-types-list {
+      margin-bottom: 8px;
+      color: rgba(0,0,0,0.74);
+      padding: var(--raml-docs-method-viewer-traits-list-padding, 0px 12px);
+      @apply(--raml-docs-method-viewer-traits-list);
+    }
+
+    .trait-value,
+    .resource-types-value {
+      color: var(--raml-docs-method-viewer-traits-list-values-color, rgba(0,0,0,0.94));
+      @apply(--raml-docs-method-viewer-traits-list-values);
+    }
+
+    .trait-label,
+    .resource-types-label {
+      color: var(--raml-docs-method-viewer-traits-list-label-color, inherit);
+      @apply(--raml-docs-method-viewer-traits-list-label);
+    }
+
+    .help-icon-link-external {
+      width: 16px;
+      height: 16px;
+      vertical-align: text-bottom;
+      @apply(--raml-docs-method-viewer-traits-list-help-icon);
+    }
+
+    .title-area-actions {
       @apply(--title-area-actions);
     }
 
@@ -285,6 +326,25 @@ Custom property | Description | Default
             <span class="resource-name">[[_computeResourceName(raml.*)]]</span>
           </h1>
         </div>
+
+        <template is="dom-if" if="[[hasTraits]]">
+          <div class="traits-list">
+            <span class="trait-label">Traits:</span>
+            <span class="trait-value">[[_computeTraitsList(raml.is)]]</span>
+            <a href="https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#resource-types-and-traits" target="_blank"><iron-icon icon="arc:help-outline" class="help-icon-link-external"></iron-icon></a>
+            <paper-tooltip>A trait provids a method-level nodes such as description, headers, query string parameters, and responses.</paper-tooltip>
+          </div>
+        </template>
+
+        <template is="dom-if" if="[[hasResourceTypes]]">
+          <div class="resource-types-list">
+            <span class="resource-types-label">Resource types:</span>
+            <span class="resource-types-value">[[_computeResourceTypesList(raml.type)]]</span>
+            <a href="https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#resource-types-and-traits" target="_blank"><iron-icon icon="arc:help-outline" class="help-icon-link-external"></iron-icon></a>
+            <paper-tooltip>A resource type can specify security schemes, methods, and other nodes that can be applied to a resource as a reusable asset in RAML.</paper-tooltip>
+          </div>
+        </template>
+
         <template is="dom-if" if="[[raml.description]]">
           <marked-element smartypants markdown="[[raml.description]]">
             <div class="markdown-html resource-desc"></div>
@@ -395,6 +455,16 @@ Custom property | Description | Default
         value: false,
         computed: '_computeHasTypes(types.length)'
       },
+      // If true, the method has traits applied to it.
+      hasTraits: {
+        type: Boolean,
+        readOnly: true
+      },
+      // If true, the method has traits applied to it.
+      hasResourceTypes: {
+        type: Boolean,
+        readOnly: true
+      },
       /**
        * Curently selected path in the RAML JSON structure. Required to compute
        * sub-resources.
@@ -465,7 +535,7 @@ Custom property | Description | Default
     },
 
     observers: [
-      '_computeTypes(raml.*)',
+      '_objectChanged(raml.*)',
       '_computeMethods(currentPath, raml.*)',
       '_computeResources(currentPath, raml.*)'
     ],
@@ -557,17 +627,36 @@ Custom property | Description | Default
       }
       return r.displayName || r.relativeUri;
     },
-    // Computes list of the types in current resource. Called automatically when `raml` change.
-    _computeTypes: function() {
-      var r = this.raml;
-      if (!r) {
+
+    _objectChanged: function(record) {
+      var raml = record && record.base;
+      if (!raml) {
+        this._setHasTraits(false);
+        this._setHasResourceTypes(false);
         this._setTypes(undefined);
         return;
       }
+      if (raml.is && raml.is.length) {
+        this._setHasTraits(true);
+      } else {
+        this._setHasTraits(false);
+      }
+
+      if (raml.type && (typeof raml.type === 'string' || raml.type.length)) {
+        this._setHasResourceTypes(true);
+      } else {
+        this._setHasResourceTypes(false);
+      }
+
+      this._computeTypes(raml);
+    },
+
+    // Computes list of the types in current resource. Called automatically when `raml` change.
+    _computeTypes: function(raml) {
       var types = [];
       var self = this;
-      if (r.methods && r.methods.length) {
-        r.methods.forEach(function(method) {
+      if (raml.methods && raml.methods.length) {
+        raml.methods.forEach(function(method) {
           var type = self._listTypes(method);
           if (type) {
             types = types.concat(type);
@@ -723,6 +812,46 @@ Custom property | Description | Default
      */
     _computeIsWideLayout: function(narrow, wide) {
       return !narrow && wide;
+    },
+
+    // Computes list of traits names to display in the view.
+    _computeTraitsList: function(traits) {
+      if (!traits || !traits.length) {
+        return;
+      }
+      return traits.map(function(trait) {
+        if (typeof trait === 'string') {
+          return trait;
+        }
+        if (trait.name) {
+          return trait.name;
+        }
+        try {
+          var keys = Object.keys(trait);
+          return keys[0];
+        } catch (e) {}
+      }).join(', ');
+    },
+    // Computes list of resource type names to display in the view.
+    _computeResourceTypesList: function(type) {
+      if (!type) {
+        return;
+      }
+      if (typeof type === 'string') {
+        return type;
+      }
+      return traits.map(function(item) {
+        if (typeof item === 'string') {
+          return item;
+        }
+        if (item.name) {
+          return item.name;
+        }
+        try {
+          var keys = Object.keys(item);
+          return keys[0];
+        } catch (e) {}
+      }).join(', ');
     }
   });
   </script>

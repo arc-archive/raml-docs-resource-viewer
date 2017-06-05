@@ -18,14 +18,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../iron-test-helpers/test-helpers.js"></script>
     <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
-    <link rel="import" href="../../raml-js-parser/raml-js-parser.html">
     <link rel="import" href="../raml-docs-resource-viewer.html">
+    <link rel="import" href="../../fetch-polyfill/fetch-polyfill.html">
+    <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
+    <link rel="import" href="../../raml-js-parser/raml-js-parser.html">
+    <link rel="import" href="../../raml-json-enhance/raml-json-enhance.html">
   </head>
   <body>
 
     <test-fixture id="parser">
       <template>
-        <raml-js-parser normalize-raml></raml-js-parser>
+        <raml-js-parser json></raml-js-parser>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="enhancer">
+      <template>
+        <raml-json-enhance></raml-json-enhance>
       </template>
     </test-fixture>
 
@@ -38,26 +47,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script>
     /* global suite, test, fixture, assert, TestHelpers */
     suite('basic', function() {
-
       var element;
-      setup(function(done) {
+      var raml;
+      var parentRaml;
+
+      suiteSetup(function(done) {
         var baseUrl = location.href.substr(0, location.href.lastIndexOf('/') + 1);
-        element = fixture('basic');
         var parser = fixture('parser');
-        parser.loadApi(baseUrl + 'test.raml')
-        .then(function() {
-          element.raml = parser.get('latestJson.specification.resources.0');
-          element.currentPath = 'resources.0';
-          TestHelpers.forceXIfStamp(element);
+        var enhancer = fixture('enhancer');
+        enhancer.addEventListener('raml-json-enhance-ready', function(e) {
+          raml = e.detail.json.resources[0];
           done();
-        })
-        .catch(function(e) {
-          done(e);
+        });
+        parser.loadApi(baseUrl + 'test.raml')
+        .then(function(data) {
+          enhancer.json = data.json.specification;
         });
       });
 
+      setup(function() {
+        element = fixture('basic');
+        element.raml = raml;
+        element.currentPath = 'resources.0';
+        TestHelpers.forceXIfStamp(element);
+      });
+
       test('Should compute `types` property', function() {
-        assert.isDefined(element.types, 'types is defined');
         assert.lengthOf(element.types, 1, 'types has one element');
       });
 
@@ -75,8 +90,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       test('Should compute `resources` property', function() {
-        assert.isArray(element.resources, 'resources is true');
+        assert.isArray(element.resources, 'resources is array');
         assert.lengthOf(element.resources, 1, 'resources has one element');
+      });
+
+      test('Should compute hasTraits property', function() {
+        assert.equal(element.hasTraits, true);
+      });
+
+      test('Should display list of traits', function() {
+        TestHelpers.forceXIfStamp(element);
+        var span = Polymer.dom(element.root).querySelector('.trait-value');
+        assert.isOk(span, 'Traits values container is defined.');
+        assert.equal(span.textContent, 'visibility', 'Trait list text content equals "visibility"');
+      });
+
+      test('Should compute hasResourceTypes property', function() {
+        assert.equal(element.hasResourceTypes, true);
+      });
+
+      test('Should display list of Resource Types', function() {
+        TestHelpers.forceXIfStamp(element);
+        var span = Polymer.dom(element.root).querySelector('.resource-types-value');
+        assert.isOk(span, 'Resource types values container is defined.');
+        assert.equal(span.textContent, 'testType', 'Names list text content equals "testType"');
       });
     });
     </script>
