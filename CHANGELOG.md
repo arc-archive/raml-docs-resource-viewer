@@ -1,3 +1,13 @@
+<a name="1.0.15"></a>
+## [1.0.15](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.14...v1.0.15) (2017-06-15)
+
+
+### Update
+
+* Updated styles for traits list ([85d05feaf145e26e004580ed4aec2cb9caafc1ca](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/85d05feaf145e26e004580ed4aec2cb9caafc1ca))
+
+
+
 <a name="1.0.14"></a>
 ## [1.0.14](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.13...v1.0.14) (2017-06-05)
 
