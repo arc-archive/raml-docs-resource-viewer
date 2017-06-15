@@ -1,3 +1,9 @@
+<a name="1.0.16"></a>
+## [1.0.16](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.15...v1.0.16) (2017-06-15)
+
+
+
+
 <a name="1.0.15"></a>
 ## [1.0.15](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.14...v1.0.15) (2017-06-15)
 
