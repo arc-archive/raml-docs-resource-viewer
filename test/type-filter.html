@@ -1,0 +1,141 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../iron-test-helpers/test-helpers.js"></script>
+    <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+    <link rel="import" href="../raml-docs-resource-viewer.html">
+    <link rel="import" href="../../fetch-polyfill/fetch-polyfill.html">
+    <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
+    <link rel="import" href="../../raml-js-parser/raml-js-parser.html">
+    <link rel="import" href="../../raml-json-enhance/raml-json-enhance.html">
+  </head>
+  <body>
+
+    <test-fixture id="parser">
+      <template>
+        <raml-js-parser json></raml-js-parser>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="enhancer">
+      <template>
+        <raml-json-enhance></raml-json-enhance>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="basic">
+      <template>
+        <raml-docs-resource-viewer></raml-docs-resource-viewer>
+      </template>
+    </test-fixture>
+
+    <script>
+    /* global fixture, assert */
+    suite('deepEqual()', function() {
+      var element;
+
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('Should deep equal the same object', function() {
+        var obj = {here: {is: 'an'}, object: 2};
+        assert.isTrue(element.deepEqual(obj, obj));
+      });
+
+      test('Should deep equal object with the same properties and values', function() {
+        var obj = {here: {is: 'an'}, object: 2};
+        var obj2 = Object.assign(obj);
+        assert.isTrue(element.deepEqual(obj, obj2));
+      });
+
+      test('Should not deep equal different objects', function() {
+        var obj1 = {here: {is: 'an'}, object: 1};
+        var obj2 = {here: {is: 'an'}, object: 2};
+        assert.isFalse(element.deepEqual(obj1, obj2));
+      });
+
+      test('Should deep equal booleans', function() {
+        assert.isTrue(element.deepEqual(true, true));
+      });
+
+      test('Should not deep equal different booleans', function() {
+        assert.isFalse(element.deepEqual(true, false));
+      });
+
+      test('Should deep equal numbers', function() {
+        assert.isTrue(element.deepEqual(2, 2));
+      });
+
+      test('Should not deep equal different numbers', function() {
+        assert.isFalse(element.deepEqual(1, 2));
+      });
+
+      test('Should deep equal zero', function() {
+        assert.isTrue(element.deepEqual(0, 0));
+      });
+
+      test('Should deep equal string', function() {
+        assert.isTrue(element.deepEqual('test', 'test'));
+      });
+
+      test('Should not deep equal different strings', function() {
+        assert.isFalse(element.deepEqual('test1', 'test'));
+      });
+
+      test('Should deep equal array of primitives', function() {
+        var a1 = [1, 2, 3];
+        var a2 = [1, 2, 3];
+        assert.isTrue(element.deepEqual(a1, a2));
+      });
+
+      test('Should deep equal array of objects', function() {
+        var a1 = [{'test': true}];
+        var a2 = [{'test': true}];
+        assert.isTrue(element.deepEqual(a1, a2));
+      });
+
+      test('Should not deep equal array with reordered keys', function() {
+        var a1 = [{'test': true}, true];
+        var a2 = [true, {'test': true}];
+        assert.isFalse(element.deepEqual(a1, a2));
+      });
+
+    });
+
+    suite('_filterDuplicates()', function() {
+      var element;
+
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('Should filter redundand type', function() {
+        var obj = [
+          [{name: 'test'}],
+          [{name: 'test-2'}],
+          [{name: 'test'}]
+        ];
+        element._filterDuplicates(obj);
+        assert.lengthOf(obj, 2);
+      });
+    });
+    </script>
+
+  </body>
+</html>
