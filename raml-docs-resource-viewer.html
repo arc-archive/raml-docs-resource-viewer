@@ -28,6 +28,7 @@ the License.
 <link rel="import" href="../arc-icons/arc-icons.html">
 <link rel="import" href="../iron-scroll-target-behavior/iron-scroll-target-behavior.html">
 <link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../arc-polyfills/arc-polyfills.html">
 <!--
 `<raml-docs-resource-viewer>` An element that displays a documentation for a RAML's resource object
 
@@ -216,6 +217,7 @@ Custom property | Description | Default
 
     nav {
       width: 210px;
+      min-height: 160px;
       border-left: 1px #e5e5e5 solid;
       padding-left: 12px;
       margin: 12px 0;
@@ -356,10 +358,11 @@ Custom property | Description | Default
           <div class="section-title-area">
             <h2 id="resources">Types</h2>
             <div class="title-area-actions">
-              <paper-button on-tap="toggleTypesCollapse" class="toggle-button" title="Toogle types details">
+              <paper-button on-tap="toggleTypesCollapse" class="toggle-button">
                 [[_computeToggleActionLabel(typesOpened)]]
                 <iron-icon icon="arc:expand-more" class$="[[_computeToggleIconClass(typesOpened)]]"></iron-icon>
               </paper-button>
+              <paper-tooltip animation-delay="200">Toogle types details</paper-tooltip>
             </div>
           </div>
           <iron-collapse opened="[[typesOpened]]">
@@ -374,42 +377,45 @@ Custom property | Description | Default
           <div class="section-title-area">
             <h2 id="methods">Methods and sub-resources</h2>
             <div class="title-area-actions">
-              <paper-button on-tap="toggleMethodsCollapse" class="toggle-button" title="Toogle methods and sub-resources details">
+              <paper-button on-tap="toggleMethodsCollapse" class="toggle-button">
                 [[_computeToggleActionLabel(methodsOpened)]]
                 <iron-icon icon="arc:expand-more" class$="[[_computeToggleIconClass(methodsOpened)]]"></iron-icon>
               </paper-button>
+              <paper-tooltip animation-delay="200">Toogle methods and sub-resources details</paper-tooltip>
             </div>
           </div>
           <iron-collapse opened="[[methodsOpened]]">
             <div class="sub-resources-list">
-              <table class="params-table" id="substable">
-                <thead class="params-table-header">
-                  <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr hidden$="[[!methods]]" class="params-table-header subheader">
-                    <td colspan="3">Methods</td>
-                  </tr>
+              <div class="params-table" id="substable">
+                <div class="params-table-header thead">
+                  <section class="tr">
+                    <div class="td">Name</div>
+                    <div class="td">Description</div>
+                  </section>
+                </div>
+                <div class="tbody">
+                  <section hidden$="[[!methods]]" class="tr params-table-header subheader">
+                    <div class="td" colspan="3">Methods</div>
+                    <div class="td"></div>
+                  </section>
                   <template is="dom-repeat" items="[[methods]]">
-                    <tr>
-                      <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
-                      <td class="param-desc">[[item.meta.description]]</td>
-                    </tr>
+                    <section class="tr">
+                      <div class="td param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></div>
+                      <div class="td param-desc">[[item.meta.description]]</div>
+                    </section>
                   </template>
-                  <tr hidden$="[[!resources]]" class="params-table-header subheader">
-                    <td colspan="3">Sub-resources</td>
-                  </tr>
+                  <section hidden$="[[!resources]]" class="tr params-table-header subheader">
+                    <div class="td" colspan="3">Sub-resources</div>
+                    <div class="td"></div>
+                  </section>
                   <template is="dom-repeat" items="[[resources]]">
-                    <tr>
-                      <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
-                      <td class="param-desc">[[item.meta.description]]</td>
-                    </tr>
+                    <section class="tr">
+                      <div class="td param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></div>
+                      <div class="td param-desc">[[item.meta.description]]</div>
+                    </section>
                   </template>
-                </tbody>
-              </table>
+                </div>
+              </div>
             </div>
           </iron-collapse>
         </section>
@@ -665,7 +671,29 @@ Custom property | Description | Default
           }
         });
       }
+      this._filterDuplicates(types);
       this._setTypes(types);
+    },
+    /**
+     * Filters out duplicates of types so the list contain only one instance of
+     * a type.
+     *
+     * @param {Array} types List of computed types.
+     * @return {Array} list without duplicates.
+     */
+    _filterDuplicates: function(types) {
+      if (!types || !types.length) {
+        return types;
+      }
+      for (var i = 0; i < types.length; i++) {
+        var current = types[i][0];
+        for (var j = types.length - 1; j > i; j--) {
+          var compare = types[j][0];
+          if (this.deepEqual(current, compare)) {
+            types.splice(j, 1);
+          }
+        }
+      }
     },
 
     _listTypes: function(obj) {
@@ -693,7 +721,23 @@ Custom property | Description | Default
       if (!obj || !obj.body || !obj.body.length) {
         return;
       }
-      return obj.body;
+      var body = obj.body;
+      if (body instanceof Array) {
+        body = body.filter(function(type) {
+          if (!type.description && !type.properties && !type.items) {
+            return false;
+          }
+          return true;
+        });
+        if (!body.length) {
+          return;
+        }
+      } else {
+        if (!body.description && !body.properties && !body.items) {
+          return;
+        }
+      }
+      return body;
     },
 
     // Computes if the resource has defined types. It will revalidate when `types` array change.
@@ -842,7 +886,7 @@ Custom property | Description | Default
       if (typeof type === 'string') {
         return type;
       }
-      return traits.map(function(item) {
+      return type.map(function(item) {
         if (typeof item === 'string') {
           return item;
         }
@@ -854,6 +898,51 @@ Custom property | Description | Default
           return keys[0];
         } catch (e) {}
       }).join(', ');
+    },
+    /**
+     * Checks if an objects deeply equals other object
+     *
+     * @param {Object} a First object to compare
+     * @param {object} b Second object to compare
+     * @return {Boolean} True if both objects have the same list of properties
+     * and have the same values in properties.
+     */
+    deepEqual: function(a, b) {
+      var i;
+      if ((typeof a === 'object' && a) && (typeof b === 'object' && b)) {
+        var keysA = Object.keys(a);
+        var keysB = Object.keys(b);
+        var keyAlength = keysA.length;
+        var keyBlength = keysB.length;
+        if (keyAlength !== keyBlength) {
+          return false;
+        }
+        for (i = 0; i < keyAlength; i++) {
+          var prop = keysA[i];
+          if (!b.hasOwnProperty(prop)) {
+            return false;
+          }
+          if (!this.deepEqual(a[prop], b[prop])) {
+            return false;
+          }
+        }
+        return true;
+      } else if (a instanceof Array && b instanceof Array) {
+        var aLength = a.length;
+        var bLength = b.length;
+        if (aLength !== bLength) {
+          return false;
+        }
+        for (i = 0; i < aLength; i++) {
+          if (!this.deepEqual(a[i], b[i])) {
+            return false;
+          }
+        }
+        return true;
+      } else if (a !== b) {
+        return false;
+      }
+      return true;
     }
   });
   </script>
