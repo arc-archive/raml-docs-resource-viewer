@@ -382,34 +382,36 @@ Custom property | Description | Default
           </div>
           <iron-collapse opened="[[methodsOpened]]">
             <div class="sub-resources-list">
-              <table class="params-table" id="substable">
-                <thead class="params-table-header">
-                  <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr hidden$="[[!methods]]" class="params-table-header subheader">
-                    <td colspan="3">Methods</td>
-                  </tr>
+              <div class="params-table" id="substable">
+                <div class="params-table-header thead">
+                  <section class="tr">
+                    <div class="td">Name</div>
+                    <div class="td">Description</div>
+                  </section>
+                </div>
+                <div class="tbody">
+                  <section hidden$="[[!methods]]" class="tr params-table-header subheader">
+                    <div class="td" colspan="3">Methods</div>
+                    <div class="td"></div>
+                  </section>
                   <template is="dom-repeat" items="[[methods]]">
-                    <tr>
-                      <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
-                      <td class="param-desc">[[item.meta.description]]</td>
-                    </tr>
+                    <section class="tr">
+                      <div class="td param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></div>
+                      <div class="td param-desc">[[item.meta.description]]</div>
+                    </section>
                   </template>
-                  <tr hidden$="[[!resources]]" class="params-table-header subheader">
-                    <td colspan="3">Sub-resources</td>
-                  </tr>
+                  <section hidden$="[[!resources]]" class="tr params-table-header subheader">
+                    <div class="td" colspan="3">Sub-resources</div>
+                    <div class="td"></div>
+                  </section>
                   <template is="dom-repeat" items="[[resources]]">
-                    <tr>
-                      <td class="param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></td>
-                      <td class="param-desc">[[item.meta.description]]</td>
-                    </tr>
+                    <section class="tr">
+                      <div class="td param-name"><a href="#" data-path$="[[item.path]]">[[item.meta.name]]</a></div>
+                      <div class="td param-desc">[[item.meta.description]]</div>
+                    </section>
                   </template>
-                </tbody>
-              </table>
+                </div>
+              </div>
             </div>
           </iron-collapse>
         </section>
