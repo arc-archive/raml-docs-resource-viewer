@@ -1,3 +1,28 @@
+<a name="1.0.17"></a>
+## [1.0.17](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.16...v1.0.17) (2017-07-03)
+
+
+### Fix
+
+* Fixed table styles definition. ([77ab986d69a8ef1f959766ceba1ca2f41618f643](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/77ab986d69a8ef1f959766ceba1ca2f41618f643))
+* Fixed variable name to match the right name. ([14052335288537ce7af2d084f584a07fe7878610](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/14052335288537ce7af2d084f584a07fe7878610))
+
+### New
+
+* Added API Console styles to the demo page to preview cahanges. ([f1479d018d9c2a50a2b96510105dfe0d86fec4e6](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/f1479d018d9c2a50a2b96510105dfe0d86fec4e6))
+* Added filter function to filter out repeated types definitions. ([f1c6059b5736e243cb596df7ccf9f24833920bb1](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/f1c6059b5736e243cb596df7ccf9f24833920bb1))
+* Added JS polyfills for new Object and Array functions. ([8c95e7c6293ea1be4a4db99711c68f52a50e22d2](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/8c95e7c6293ea1be4a4db99711c68f52a50e22d2))
+* Added test to filter function. ([1b0dd2eaf0482e6a0ecc4564c800e752ea2b3bfb](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/1b0dd2eaf0482e6a0ecc4564c800e752ea2b3bfb))
+
+### Update
+
+* Added minimum height to the side nav so it will always render correctly. ([7532ffa8317901ed92ceba3f0aa50e74c6b0b39f](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/7532ffa8317901ed92ceba3f0aa50e74c6b0b39f))
+* Filtering body types that doesn't have description or properties. ([6859bc1c5efae38d556fe24b8c2f339c9056116c](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/6859bc1c5efae38d556fe24b8c2f339c9056116c))
+* Updated dependencies versions for tests and demo. ([b41bc0eaf26ee13760e18ef96ef50fb66f655949](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/b41bc0eaf26ee13760e18ef96ef50fb66f655949))
+* Updated Travis configuration file to remove cache and sudo. ([20f596732f368a6c7d006500cf79f0e266c57b0e](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/20f596732f368a6c7d006500cf79f0e266c57b0e))
+
+
+
 <a name="1.0.16"></a>
 ## [1.0.16](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.15...v1.0.16) (2017-06-15)
 
