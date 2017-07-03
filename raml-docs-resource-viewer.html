@@ -695,7 +695,23 @@ Custom property | Description | Default
       if (!obj || !obj.body || !obj.body.length) {
         return;
       }
-      return obj.body;
+      var body = obj.body;
+      if (body instanceof Array) {
+        body = body.filter(function(type) {
+          if (!type.description && !type.properties && !type.items) {
+            return false;
+          }
+          return true;
+        });
+        if (!body.length) {
+          return;
+        }
+      } else {
+        if (!body.description && !body.properties && !body.items) {
+          return;
+        }
+      }
+      return body;
     },
 
     // Computes if the resource has defined types. It will revalidate when `types` array change.
