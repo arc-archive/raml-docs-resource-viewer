@@ -114,6 +114,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         assert.isOk(span, 'Resource types values container is defined.');
         assert.equal(span.textContent, 'testType', 'Names list text content equals "testType"');
       });
+
+      test('Should render list of annotations', function() {
+        TestHelpers.forceXIfStamp(element);
+        var display = Polymer.dom(element.root).querySelector('raml-annotations-display');
+        assert.isOk(display);
+      });
     });
     </script>
 
