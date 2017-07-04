@@ -101,6 +101,8 @@ Custom property | Description | Default
 `--raml-docs-method-viewer-traits-list-label-color` | Color of the traits list label | `inherit`
 `--raml-docs-method-viewer-traits-list-help-icon` | A mixin applied to the "more info" icon | `{}`
 `--raml-docs-method-viewer-traits-list-padding` | Padding applied to the traits and resource types container | `0px 12px`
+`--raml-docs-resource-viewer-annotations-color` | Color of the annotations lable | `rgba(0,0,0,0.74)`
+`--raml-docs-resource-viewer-annotations` | Mixin applied to the annotations label | `{}`
 
 
 
