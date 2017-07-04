@@ -31,8 +31,24 @@ resourceTypes:
           body:
             application/json:
               description: Test response.
+annotationTypes:
+  annotationTest: nil
+  deprecated: string
+  clearanceLevel:
+    properties:
+      level:
+        enum: [ low, medium, high ]
+        required: true
+      signature:
+        pattern: "\\d{3}-\\w{12}"
+        required: true
 /people:
   is: [visibility]
   type: testType
+  (deprecated): This endpoint is deprecated and will be removed.
+  (clearanceLevel):
+      level: high
+      signature: 230-ghtwvfrs1itr
+  (annotationTest):
   get:
   /test:

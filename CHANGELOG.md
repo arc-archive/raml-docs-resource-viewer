@@ -1,3 +1,13 @@
+<a name="1.0.19"></a>
+## [1.0.19](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.18...v1.0.19) (2017-07-04)
+
+
+### New
+
+* Added annotations label ([262bc81dd607d5928ae890a6f8f333270b14fa2d](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/262bc81dd607d5928ae890a6f8f333270b14fa2d))
+
+
+
 <a name="1.0.18"></a>
 ## [1.0.18](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.17...v1.0.18) (2017-07-03)
 

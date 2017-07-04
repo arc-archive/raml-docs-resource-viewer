@@ -29,6 +29,7 @@ the License.
 <link rel="import" href="../iron-scroll-target-behavior/iron-scroll-target-behavior.html">
 <link rel="import" href="../paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../arc-polyfills/arc-polyfills.html">
+<link rel="import" href="../raml-annotations-display/raml-annotations-display.html">
 <!--
 `<raml-docs-resource-viewer>` An element that displays a documentation for a RAML's resource object
 
@@ -129,6 +130,8 @@ Custom property | Description | Default
 `--raml-docs-method-viewer-traits-list-label-color` | Color of the traits list label | `inherit`
 `--raml-docs-method-viewer-traits-list-help-icon` | A mixin applied to the "more info" icon | `{}`
 `--raml-docs-method-viewer-traits-list-padding` | Padding applied to the traits and resource types container | `0px 12px`
+`--raml-docs-resource-viewer-annotations-color` | Color of the annotations lable | `rgba(0,0,0,0.74)`
+`--raml-docs-resource-viewer-annotations` | Mixin applied to the annotations label | `{}`
 
 @group RAML Elements
 @element raml-docs-resource-viewer
@@ -317,6 +320,11 @@ Custom property | Description | Default
       @apply(--title-area-actions);
     }
 
+    raml-annotations-display {
+      color: var(--raml-docs-resource-viewer-annotations-color, rgba(0,0,0,0.74));
+      @apply(--content-section);
+      @apply(--raml-docs-resource-viewer-annotations);
+    }
     </style>
 
     <iron-media-query query="(min-width: 800px)" query-matches="{{wide}}"></iron-media-query>
@@ -347,6 +355,10 @@ Custom property | Description | Default
             <a href="https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#resource-types-and-traits" target="_blank"><iron-icon icon="arc:help-outline" class="help-icon-link-external"></iron-icon></a>
             <paper-tooltip>A resource type can specify security schemes, methods, and other nodes that can be applied to a resource as a reusable asset in RAML.</paper-tooltip>
           </div>
+        </template>
+
+        <template is="dom-if" if="[[hasAnnotations]]">
+          <raml-annotations-display annotations="[[raml.annotations]]"></raml-annotations-display>
         </template>
 
         <template is="dom-if" if="[[raml.description]]">
@@ -470,6 +482,11 @@ Custom property | Description | Default
       },
       // If true, the method has traits applied to it.
       hasResourceTypes: {
+        type: Boolean,
+        readOnly: true
+      },
+      // Computed value, true if raml object has annotations
+      hasAnnotations: {
         type: Boolean,
         readOnly: true
       },
@@ -641,6 +658,7 @@ Custom property | Description | Default
       if (!raml) {
         this._setHasTraits(false);
         this._setHasResourceTypes(false);
+        this._setHasAnnotations(false);
         this._setTypes(undefined);
         return;
       }
@@ -654,6 +672,12 @@ Custom property | Description | Default
         this._setHasResourceTypes(true);
       } else {
         this._setHasResourceTypes(false);
+      }
+
+      if (raml.annotations && raml.annotations.length) {
+        this._setHasAnnotations(true);
+      } else {
+        this._setHasAnnotations(false);
       }
 
       this._computeTypes(raml);
