@@ -1,3 +1,13 @@
+<a name="1.0.21"></a>
+## [1.0.21](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.20...1.0.21) (2017-09-08)
+
+
+### Update
+
+* Updated version of the enhancer ([a666b4dfbe85b2e63af3c798d7ad2eecbe574c33](https://github.com/advanced-rest-client/raml-docs-resource-viewer/commit/a666b4dfbe85b2e63af3c798d7ad2eecbe574c33))
+
+
+
 <a name="1.0.20"></a>
 ## [1.0.20](https://github.com/advanced-rest-client/raml-docs-resource-viewer/compare/1.0.19...v1.0.20) (2017-07-04)
 
